@@ -110,7 +110,7 @@ public class ZoomAnimatedTransitioningDelegate: NSObject, UIViewControllerTransi
 
 extension ZoomAnimatedTransitioningDelegate: UIGestureRecognizerDelegate {
     public func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer else {
+        guard let _ = gestureRecognizer as? UIPanGestureRecognizer else {
             return false
         }
         
@@ -158,9 +158,13 @@ extension ZoomInAnimator: UIViewControllerAnimatedTransitioning {
         
         // Pauses slideshow
         self.referenceSlideshowView?.pauseTimerIfNeeded()
-        
-        let containerView = transitionContext.containerView()!
-        
+
+        #if swift(>=2.3)
+            let containerView = transitionContext.containerView()
+        #else
+            let containerView = transitionContext.containerView()!
+        #endif
+
         let fromViewController: UIViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)!
         let toViewController: FullScreenSlideshowViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey) as! FullScreenSlideshowViewController
         
@@ -217,7 +221,11 @@ extension ZoomOutAnimator: UIViewControllerAnimatedTransitioning {
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
         let toViewController: UIViewController = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)!
         let fromViewController: FullScreenSlideshowViewController = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey) as! FullScreenSlideshowViewController
-        let containerView = transitionContext.containerView()!
+        #if swift(>=2.3)
+            let containerView = transitionContext.containerView()
+        #else
+            let containerView = transitionContext.containerView()!
+        #endif
         
         toViewController.view.frame = transitionContext.finalFrameForViewController(toViewController)
         toViewController.view.alpha = 0
